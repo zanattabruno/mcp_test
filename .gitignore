@@ -1,0 +1,74 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+__pypackages__/
+
+# Packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+pip-log.txt
+
+# Environments
+.env
+.env.*
+.venv/
+venv/
+ENV/
+env/
+.python-version
+
+# IDE/editor
+.vscode/
+.idea/
+.history/
+
+# Byte-compiled / optimized / DLL files
+*.so
+
+# Unit test / coverage reports
+.coverage
+.coverage.*
+.tox/
+.pytest_cache/
+htmlcov/
+nosetests.xml
+coverage.xml
+test-results/
+
+# Django
+local_settings.py
+*.log
+media/
+staticfiles/
+# Migrations cache
+**/migrations/__pycache__/
+celerybeat-schedule
+celerybeat.pid
+
+# SQLite database
+# If you intend to version control the DB, remove these lines
+*.sqlite3
+*.sqlite3-journal
+db.sqlite3
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Caches / analysis
+.cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.pytype/
+
+# Node
+node_modules/
+
+# Docker
+.dockerignore
