@@ -64,7 +64,7 @@ async def api_info() -> dict[str, Any]:
 	async with _client() as client:
 		# Try a lightweight list call to confirm connectivity
 		try:
-			r = await client.get("/clients", params={"limit": 1})
+			r = await client.get("/clients/", params={"limit": 1})
 			ok = r.status_code == 200
 		except Exception:
 			ok = False
@@ -84,7 +84,7 @@ async def list_clients(name: str | None = None, email: str | None = None, search
 	if ordering:
 		params["ordering"] = ordering
 	async with _client() as client:
-		r = await client.get("/clients", params=params)
+		r = await client.get("/clients/", params=params)
 		r.raise_for_status()
 		data = r.json()
 		if isinstance(data, list):
@@ -122,7 +122,7 @@ async def list_meetings(
 	if ordering:
 		params["ordering"] = ordering
 	async with _client() as client:
-		r = await client.get("/meetings", params=params)
+		r = await client.get("/meetings/", params=params)
 		r.raise_for_status()
 		data = r.json()
 		if isinstance(data, list):

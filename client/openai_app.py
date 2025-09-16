@@ -120,7 +120,7 @@ def main() -> None:
     parser.add_argument("--server-url", default=os.getenv("MCP_SERVER_URL", "http://localhost:8001/mcp"), help="MCP Streamable HTTP server URL")
     parser.add_argument("--list-tools", action="store_true", help="List tools from the MCP server and exit")
     parser.add_argument("--ask", help="Ask a single prompt; requires OPENAI_API_KEY")
-    parser.add_argument("--model", default=os.getenv("OPENAI_MODEL", "gpt-4o-mini"), help="OpenAI model for chat completions")
+    parser.add_argument("--model", default=os.getenv("OPENAI_MODEL", "gpt-5"), help="OpenAI model for chat completions")
     parser.add_argument("--system", default=None, help="Optional system prompt")
     args = parser.parse_args()
 
