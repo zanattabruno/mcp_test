@@ -3,6 +3,7 @@ from typing import Any, Literal, TypedDict
 
 import httpx
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
 from pydantic import AnyHttpUrl, BaseModel, Field
 
 from mcp.server.fastmcp import FastMCP
@@ -49,6 +50,8 @@ class MeetingOut(BaseModel):
 
 # Create FastMCP server
 mcp = FastMCP(name="Meeting Scheduler MCP")
+# Ensure the mounted path resolves to /mcp (not /mcp/mcp)
+mcp.settings.streamable_http_path = "/"
 
 
 def _client() -> httpx.AsyncClient:
@@ -142,8 +145,19 @@ async def create_meeting(payload: MeetingIn) -> MeetingOut:
 		return MeetingOut(**r.json())
 
 
+@asynccontextmanager
+async def _lifespan(app: FastAPI):
+	# Initialize the Streamable HTTP session manager and keep it running
+	# during the lifetime of the FastAPI app to avoid 500s on /mcp/.
+	# Ensure the session manager exists (created lazily by streamable_http_app()).
+	mcp_app_placeholder = mcp.streamable_http_app()
+	_ = mcp_app_placeholder  # silence unused variable warning
+	async with mcp.session_manager.run():
+		yield
+
+
 # Expose FastAPI with health and mount MCP (Streamable HTTP)
-app = FastAPI(title="Meeting Scheduler MCP", version="0.1.0")
+app = FastAPI(title="Meeting Scheduler MCP", version="0.1.0", lifespan=_lifespan)
 
 
 @app.get("/health")
@@ -152,7 +166,8 @@ async def health() -> dict[str, str]:
 
 
 # Mount MCP streamable HTTP server at /mcp
-app.mount("/mcp", mcp.streamable_http_app())
+_mcp_asgi_app = mcp.streamable_http_app()
+app.mount("/mcp", _mcp_asgi_app)
 
 
 def main():  # pragma: no cover

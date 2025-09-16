@@ -8,3 +8,4 @@ uvicorn[standard]==0.31.1
 httpx==0.27.2
 pydantic==2.11.3
 mcp==1.14.0
+openai==1.54.3
