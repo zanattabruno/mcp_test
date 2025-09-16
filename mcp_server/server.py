@@ -73,14 +73,19 @@ async def api_info() -> dict[str, Any]:
 
 @mcp.tool()
 async def list_clients(name: str | None = None, email: str | None = None, search: str | None = None, ordering: str | None = None) -> list[ClientOut]:
-	"""List clients. Filters: `name`, `email`, `search` (name,email,phone), `ordering` (name,-name,created_at)."""
+	"""List clients. Filters: `name` (mapped to `search`), `email`, `search` (name,email,phone), `ordering` (name,-name,created_at).
+
+	Note: If `search` is provided, it takes precedence; otherwise, `name` is
+	mapped to `search` to enable case-insensitive matching across name/email/phone.
+	"""
 	params: dict[str, Any] = {}
-	if name:
-		params["name"] = name
 	if email:
 		params["email"] = email
+	# Prefer broad, case-insensitive search; fall back to name -> search
 	if search:
 		params["search"] = search
+	elif name:
+		params["search"] = name
 	if ordering:
 		params["ordering"] = ordering
 	async with _client() as client:
