@@ -12,6 +12,9 @@ Usage
    - `export OPENAI_API_KEY=sk-...`
    - `python client/openai_app.py --ask "Create a client named Alice (alice@example.com) and list meetings" --model gpt-4o-mini`
 
+Convenience script
+- `scripts/mcp_chat.sh "<prompt>" [MODEL]` wraps the above with sensible defaults and interactive mode when no prompt is given. See the root README section “scripts/mcp_chat.sh usage” for details and examples.
+
 Environment
 - `MCP_SERVER_URL` (optional): Defaults to `http://localhost:8001/mcp`
 - `OPENAI_API_KEY`: Required for `--ask`

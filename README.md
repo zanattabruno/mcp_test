@@ -1,5 +1,7 @@
 # MCP Meeting Scheduler (Django + DRF + FastAPI)
 
+Primary goal: demonstrate MCP capabilities in a simple, self-contained environment.
+
 End-to-end example of a Meeting Scheduler REST API (Django + DRF) with a FastAPI-based MCP bridge server and simple client utilities. Schedule meetings per client with overlap prevention, explore OpenAPI docs, and drive actions via MCP tools or OpenAI tool-calling.
 
 ## What’s inside
@@ -13,7 +15,7 @@ End-to-end example of a Meeting Scheduler REST API (Django + DRF) with a FastAPI
 
 Repo layout
 - `api/` — Models, serializers, views, tests
-- `scheduler/` — Django project (settings, urls)
+- `scheduler/` — Django project (settings, urls) — see [`scheduler/README.md`](scheduler/README.md)
 - `mcp_server/` — FastAPI MCP bridge (`/mcp`, `/health`)
 - `client/` — Simple CLI for listing tools and asking a question with OpenAI
 - `scripts/` — Helper scripts to run servers and call tools
@@ -142,6 +144,40 @@ export OPENAI_API_KEY=sk-...
 # export MCP_SERVER_URL=http://127.0.0.1:8001/mcp
 scripts/mcp_chat.sh "Create a client named Alice and list meetings"
 ```
+
+### `scripts/mcp_chat.sh` usage
+
+Synopsis
+- `scripts/mcp_chat.sh "<prompt>" [MODEL]` — single-turn chat where the model can call MCP tools
+- `scripts/mcp_chat.sh` — interactive chat mode (multi-turn in the same session)
+
+Defaults
+- `OPENAI_MODEL` or positional `[MODEL]` controls the model; default is `gpt-4o-mini`.
+- `MCP_SERVER_URL` defaults to `http://127.0.0.1:8001/mcp`.
+- Requires `OPENAI_API_KEY` and an active venv with repo deps installed.
+
+Examples
+```bash
+# Single turn (uses OPENAI_MODEL or defaults)
+export OPENAI_API_KEY=sk-...
+scripts/mcp_chat.sh "Create a client named Alice (alice@example.com) then list clients"
+
+# Override the model via argument
+scripts/mcp_chat.sh "List meetings for client 1 this week" gpt-4o-mini
+
+# Interactive session (no prompt argument)
+scripts/mcp_chat.sh
+# Then type prompts; the model will call tools as needed.
+
+# Point at a non-default MCP server URL
+export MCP_SERVER_URL=http://localhost:8001/mcp
+scripts/mcp_chat.sh "Schedule a 30-minute meeting for client 1 tomorrow at 10:00 UTC"
+```
+
+Notes
+- The assistant uses tool-calling to hit the MCP server which proxies to the Django API. Actions like creating clients/meetings will persist in SQLite.
+- If you see "OPENAI_API_KEY is required", export your key and re-run.
+- Ensure both servers are running (see “Run it” above) before chatting, or tool calls will fail.
 
 ## Scripts
 

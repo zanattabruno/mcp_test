@@ -1,5 +1,7 @@
 # Meeting Scheduler MCP Server
 
+Primary goal: demonstrate MCP capabilities in a simple, self-contained environment.
+
 This folder contains a small MCP server that bridges to the Django + DRF Meeting Scheduler API in this repo.
 
 It provides:
